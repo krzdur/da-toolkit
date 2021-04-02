@@ -1,17 +1,21 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
+from da_toolkit import config
+
+
 class Redshift:
 
-    def __init__(self, login, password):
+    def __init__(self, login=config.login, password=config.password):
         self.login = login
         self.password = password
         self.engine = None
         self.connect()
 
     def connect(self):
-        self.engine = create_engine('postgresql://{0}:{1}@redshift.z-dn.net:5439/prod'.format(self.login, self.password),
-                                    isolation_level="AUTOCOMMIT")
+        self.engine = create_engine(
+            'postgresql://{0}:{1}@redshift.z-dn.net:5439/prod'.format(self.login, self.password),
+            isolation_level="AUTOCOMMIT")
 
     def query(self, query):
         df = pd.read_sql_query(sql=query, con=self.engine)
