@@ -1,7 +1,10 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-from da_toolkit import config
+from google.cloud import bigquery
+from google.oauth2 import service_account
+
+import config
 
 
 class Redshift:
@@ -31,3 +34,22 @@ class Redshift:
         """
         schema, table = table.split('.')
         df.to_sql(table, self.engine, index=False, if_exists='append', schema=schema)
+
+
+class BigQuery:
+
+    def __init__(self, project='brainly-bi'):
+        self.client = None
+        self.project = project
+        self.connect()
+
+    def connect(self):
+        credentials = service_account.Credentials.from_service_account_file(
+            config.gc_account)
+        self.client = bigquery.Client(project=self.project, credentials=credentials)
+
+    def query(self, query):
+        query_job = self.client.query(query)  # API request
+        results = query_job.result()  # Waits for query to finish
+        df = results.to_dataframe()
+        return df
