@@ -1,0 +1,64 @@
+import numpy as np
+import statsmodels.stats.api as sms
+from statsmodels.stats.proportion import proportions_ztest
+
+
+class Analysis:
+
+    def __init__(self, df, metrics, total_col='total_users', variant_col='variant', alpha=0.05):
+        self.df = df
+        self.metrics = metrics
+        self.total_col = total_col
+        self.variant_col = variant_col
+        self.alpha = alpha
+
+        self.variants = None
+        self.get_variants()
+
+        self.results = {}
+        self.run()
+
+    def get_variants(self):
+        variants = self.df[self.variant_col].values  # takes values from variant col
+        self.variants = np.delete(variants, 0)  # removes 0 from variants
+
+    def test_metric(self, metric):
+        self.results[metric] = {}
+        for var in self.variants:
+            temp_df = self.df[self.df[self.variant_col].isin(['0', var])]
+
+            # t-test
+            count = temp_df[metric]
+            nobs = temp_df[self.total_col]
+            z_stat, p_val = proportions_ztest(count, nobs)
+
+            # cvr
+            cvr = count / nobs
+            cvr = cvr.reset_index(drop=True)
+
+            # delta
+            delta = cvr.iloc[1] / cvr.iloc[0] - 1
+
+            # power calc
+            es = sms.proportion_effectsize(cvr.iloc[1], cvr.iloc[0])  # Cohen's h
+            nobs1 = nobs.iloc[0]
+            ratio = nobs.iloc[1] / nobs.iloc[0]
+            power = sms.NormalIndPower().solve_power(es, nobs1=nobs1, alpha=self.alpha, ratio=ratio, alternative='two-sided')
+
+            # display results
+            if p_val / 2 > self.alpha:
+                res = 'not significant'
+            else:
+                res = 'significant!'
+
+            self.results[metric][var] = {'cvr': cvr,
+                                         'delta': delta,
+                                         'z_stat': z_stat,
+                                         'p_val': p_val / 2,
+                                         'power': power,
+                                         'res': res
+                                         }
+
+    def run(self):
+        for metric in self.metrics:
+            self.test_metric(metric)
