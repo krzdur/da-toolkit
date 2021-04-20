@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import statsmodels.stats.api as sms
 from statsmodels.stats.proportion import proportions_ztest
 
@@ -16,10 +17,12 @@ class Analysis:
         self.get_variants()
 
         self.results = {}
+        self.results_df = None
         self.run()
 
     def get_variants(self):
         variants = self.df[self.variant_col].values  # takes values from variant col
+        variants.sort()
         self.variants = np.delete(variants, 0)  # removes 0 from variants
 
     def test_metric(self, metric):
@@ -43,7 +46,8 @@ class Analysis:
             es = sms.proportion_effectsize(cvr.iloc[1], cvr.iloc[0])  # Cohen's h
             nobs1 = nobs.iloc[0]
             ratio = nobs.iloc[1] / nobs.iloc[0]
-            power = sms.NormalIndPower().solve_power(es, nobs1=nobs1, alpha=self.alpha, ratio=ratio, alternative='two-sided')
+            power = sms.NormalIndPower().solve_power(es, nobs1=nobs1, alpha=self.alpha, ratio=ratio,
+                                                     alternative='two-sided')
 
             # display results
             if p_val / 2 > self.alpha:
@@ -59,6 +63,13 @@ class Analysis:
                                          'res': res
                                          }
 
+    def save_to_df(self):
+        reform = {(outerKey, innerKey): values for outerKey, innerDict in self.results.items() \
+                  for innerKey, values in innerDict.items()}
+        self.results_df = pd.DataFrame(reform).transpose()
+
     def run(self):
         for metric in self.metrics:
             self.test_metric(metric)
+        self.save_to_df()
+        return self.results_df
