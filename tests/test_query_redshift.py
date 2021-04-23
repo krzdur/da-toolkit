@@ -1,4 +1,4 @@
-from da_toolkit.databases import Redshift
+from src.da_toolkit import Redshift
 
 
 def test_access_rds():

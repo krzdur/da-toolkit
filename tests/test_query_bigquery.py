@@ -1,4 +1,4 @@
-from da_toolkit.databases import BigQuery
+from src.da_toolkit import BigQuery
 
 
 def test_access_bq():

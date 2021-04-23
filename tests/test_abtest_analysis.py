@@ -1,5 +1,5 @@
-from da_toolkit.databases import BigQuery
-from da_toolkit.experiments import Analysis
+from src.da_toolkit import BigQuery
+from src.da_toolkit import Analysis
 
 import pandas as pd
 
