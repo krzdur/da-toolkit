@@ -14,11 +14,15 @@ class Analysis:
         self.alpha = alpha
 
         self.variants = None
+        self.sort_df()
         self.get_variants()
 
         self.results = {}
         self.results_df = None
         self.run()
+
+    def sort_df(self):
+        self.df.sort_values(by=self.variant_col, inplace=True)
 
     def get_variants(self):
         variants = self.df[self.variant_col].values  # takes values from variant col
@@ -50,7 +54,7 @@ class Analysis:
                                                      alternative='two-sided')
 
             # display results
-            if p_val / 2 > self.alpha:
+            if p_val > self.alpha:
                 res = 'not significant'
             else:
                 res = 'significant!'
@@ -58,7 +62,7 @@ class Analysis:
             self.results[metric][var] = {'cvr': cvr,
                                          'delta': delta,
                                          'z_stat': z_stat,
-                                         'p_val': p_val / 2,
+                                         'p_val': p_val,
                                          'power': power,
                                          'res': res
                                          }
