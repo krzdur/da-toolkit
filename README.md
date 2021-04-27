@@ -1,4 +1,4 @@
-# Data Analyst toolkit
+# Data Analytics toolkit
 
 ---
 
