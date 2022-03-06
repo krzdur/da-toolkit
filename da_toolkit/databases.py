@@ -6,6 +6,9 @@ from google.oauth2 import service_account
 
 import os
 
+from da_toolkit.config import Config
+Config.load('config.env')
+
 
 class Redshift:
 
