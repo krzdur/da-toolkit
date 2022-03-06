@@ -1,4 +1,4 @@
-config.py
+config.env
 service_account.json
 */service_account.json
 Dockerfile
