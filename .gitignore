@@ -1,6 +1,7 @@
-config.env
+*.env
 service_account.json
 */service_account.json
+*/queries/rds_query.sql
 Dockerfile
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,venv,jupyternotebooks

@@ -6,6 +6,9 @@ from google.oauth2 import service_account
 
 import os
 
+from da_toolkit.config import Config
+Config.load('da_toolkit_config.env')
+
 
 class Redshift:
 
@@ -48,6 +51,6 @@ class BigQuery:
 
     def query(self, query):
         query_job = self.client.query(query)  # API request
-        results = query_job.result()  # Waits for query to finish
-        df = results.to_dataframe()
+        df = query_job.result()\
+            .to_dataframe()  # Waits for query to finish
         return df
