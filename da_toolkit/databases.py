@@ -4,20 +4,17 @@ from sqlalchemy import create_engine
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-import config
+import os
 
 
 class Redshift:
 
-    def __init__(self, login=config.login, password=config.password):
-        self.login = login
-        self.password = password
-        self.engine = None
-        self.connect()
-
-    def connect(self):
+    def __init__(self):
+        self.db_url = os.getenv('RDS_HOST')
+        self.db_port = os.getenv('RDS_PORT')
+        self.db_name = os.getenv('RDS_NAME')
         self.engine = create_engine(
-            'postgresql://{0}:{1}@redshift.z-dn.net:5439/prod'.format(self.login, self.password),
+            'postgresql://{0}:{1}/{2}'.format(self.db_url, self.db_port, self.db_name),
             isolation_level="AUTOCOMMIT")
 
     def query(self, query):
@@ -30,7 +27,7 @@ class Redshift:
             df :
                 a Pandas DataFrame you want to add to Redshift
             table :
-                a table you want to append you df to; must contain schema name e.g "krzysztof_durbajlo.test_table"
+                a table you want to append you df to; must contain schema name e.g "schema_name.test_table"
         """
         schema, table = table.split('.')
         df.to_sql(table, self.engine, index=False, if_exists='append', schema=schema)
@@ -38,14 +35,15 @@ class Redshift:
 
 class BigQuery:
 
-    def __init__(self, project='brainly-bi'):
+    def __init__(self):
         self.client = None
-        self.project = project
+        self.project = os.getenv('GCP_PROJECT_NAME')
+        self.service_account = os.getenv('SERVICE_ACCOUNT_FILE')
         self.connect()
 
     def connect(self):
         credentials = service_account.Credentials.from_service_account_file(
-            config.gc_account)
+            self.service_account)
         self.client = bigquery.Client(project=self.project, credentials=credentials)
 
     def query(self, query):
