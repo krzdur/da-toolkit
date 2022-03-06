@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 class Config:
 
     def __init__(self):
-        self.f = open('da_toolkit_config.env')
+        self.f = open('da_toolkit_config.env', 'w')
 
     def get_bq_creds(self):
         """ Getting credentials for BigQuery"""
