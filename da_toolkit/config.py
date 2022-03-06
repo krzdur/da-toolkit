@@ -19,7 +19,7 @@ class Config:
             project = input('Provide Google Cloud Platform project name:\t')
 
             self.f.write('SERVICE_ACCOUNT_FILE={}\n'.format(Path(service_acc)))
-            self.f.write('GCP_PROJECT_NAME=\'{}\'\n'.format(project))
+            self.f.write('GCP_PROJECT_NAME={}\n'.format(project))
         elif proceed.lower() == 'n':
             pass
         else:
