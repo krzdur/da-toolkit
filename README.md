@@ -1,4 +1,4 @@
-# Data Analytics toolkit
+# Data Analyst toolkit
 
 Python library optimizing some manual tasks of Data Analysts.
 
@@ -15,21 +15,20 @@ python -m venv my_env
 pip install git+https://github.com/krzdur/da-toolkit.git
 ```
 
-2. Create your own `config.py` file. It will contain your Redshift credentials and 
-Google Cloud service account json. Follow the
-example in `config-TEMPLATE.py` and put it into your working directory (the main 
-catalog that you work in).
-```python
-# redshift credentials
-login='your-login'
-password='your-password'
-
-# Google Cloud service_account.json path
-gc_account = './path/to_the_file.json'
+2. Create configuration file by running:
+```terminal
+python -m da_toolkit
 ```
-   
-3. (optional) To query BigQuery data, you will need a service account key (json file) with appropriate
-credentials.
+The installer will ask you a couple of simple questions that will help you to
+setup database connections. (To query BigQuery data, you will need a service account key (json file) with appropriate
+credentials)
+```bash
+Do you want to configure your AWS Redshift credentials? [y/n]
+```
+This step is optional if you don't want to use this feature.
+
+After going through the instructions you should see `da_toolkit_config.env` file created.
+It stores the credentials provided and will load them as environment variables.
 
 ## Use cases
 
@@ -41,4 +40,4 @@ To find out more take a look at [the examples](https://github.com/krzdur/da-tool
 
 ## Contribution
 
-Everyone is free and welcome to fork and use the code.
+Everyone is free and welcome to fork and reuse the code.
