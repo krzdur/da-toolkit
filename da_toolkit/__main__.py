@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-from config import Config
+from da_toolkit.config import Config
 
 
 def main():
