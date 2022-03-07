@@ -1,8 +1,12 @@
+# DA Toolkit config file
 *.env
+
+# GCP service account key
 service_account.json
 */service_account.json
-*/queries/rds_query.sql
-Dockerfile
+
+# a query used to get Redshift data
+examples/queries/rds_query.sql
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,venv,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,venv,jupyternotebooks
